@@ -133,8 +133,8 @@ def play():
         db.session.rollback()
         return jsonify({'error': 'Internal server error'}), 500
 
-@app.route('/leaderboard', methods=['GET'])
-def get_leaderboard():
+@app.route('/scoreboard', methods=['GET'])
+def get_scoreboard():
     """Get top 10 players by wins"""
     try:
         players = Player.query.order_by(Player.wins.desc()).limit(10).all()
@@ -148,7 +148,7 @@ def get_leaderboard():
             'win_rate': p.win_rate
         } for idx, p in enumerate(players)])
     except Exception as e:
-        return jsonify({'error': 'Failed to fetch leaderboard'}), 500
+        return jsonify({'error': 'Failed to fetch scoreboard'}), 500
 
 @app.route('/health', methods=['GET'])
 def health_check():

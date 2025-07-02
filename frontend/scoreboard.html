@@ -45,22 +45,22 @@
                 <th>Win Rate (%)</th>
             </tr>
         </thead>
-        <tbody id="leaderboard-body">
+        <tbody id="scoreboard-body">
             <tr><td colspan="7">Loading...</td></tr>
         </tbody>
     </table>
 
     <script>
-        async function fetchLeaderboard() {
+        async function fetchscoreboard() {
             try {
-                const res = await fetch('http://localhost:5002/leaderboard');
+                const res = await fetch('http://localhost:5002/scoreboard');
                 const data = await res.json();
 
-                const tbody = document.getElementById('leaderboard-body');
+                const tbody = document.getElementById('scoreboard-body');
                 tbody.innerHTML = '';
 
                 if (!Array.isArray(data)) {
-                    tbody.innerHTML = `<tr><td colspan="7">Error fetching leaderboard</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="7">Error fetching scoreboard</td></tr>`;
                     return;
                 }
 
@@ -84,11 +84,11 @@
 
             } catch (err) {
                 console.error(err);
-                document.getElementById('leaderboard-body').innerHTML = `<tr><td colspan="7">Error connecting to server</td></tr>`;
+                document.getElementById('scoreboard-body').innerHTML = `<tr><td colspan="7">Error connecting to server</td></tr>`;
             }
         }
 
-        fetchLeaderboard();
+        fetchscoreboard();
     </script>
 
 </body>
