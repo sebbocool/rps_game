@@ -57,22 +57,6 @@ def get_or_create (name):
         db.session.add(player)
     return player
 
-@app.route('/players', methods=['GET'])
-def list_players():
-    """Get all players ordered by wins"""
-    try:
-        players = Player.query.order_by(Player.wins.desc()).all()
-        return jsonify([{
-            'name': p.name,
-            'wins': p.wins,
-            'ties': p.ties,
-            'losses': p.losses,
-            'total_games': p.total_games,
-            'win_rate': p.win_rate,
-        } for p in players])
-    except Exception as e:
-        return jsonify({'error': 'Failed to fetch players'}), 500
-
 @app.route('/play', methods=['POST'])
 def play():
     """Play a Rock Paper Scissors game"""
@@ -165,27 +149,6 @@ def get_leaderboard():
         } for idx, p in enumerate(players)])
     except Exception as e:
         return jsonify({'error': 'Failed to fetch leaderboard'}), 500
-
-@app.route('/stats', methods=['GET'])
-def get_stats():
-    """Get overall statistics"""
-    try:
-        total_players = Player.query.count()
-        total_games = db.session.query(db.func.sum(Player.wins + Player.ties + Player.losses)).scalar() or 0
-        total_games = total_games // 2  
-        total_wins = db.session.query(db.func.sum(Player.wins)).scalar() or 0
-        total_ties = db.session.query(db.func.sum(Player.ties)).scalar() or 0
-        total_ties = total_ties // 2  
-        
-        return jsonify({
-            'total_players': total_players,
-            'total_games': total_games,
-            'total_wins': total_wins,
-            'total_ties': total_ties,
-            'tie_rate': round((total_ties / total_games * 100), 2) if total_games > 0 else 0
-        })
-    except Exception as e:
-        return jsonify({'error': 'Failed to fetch statistics'}), 500
 
 @app.route('/health', methods=['GET'])
 def health_check():
