@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rps-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rps-frontend
+  template:
+    metadata:
+      labels:
+        app: rps-frontend
+    spec:
+      containers:
+        - name: rps-frontend
+          image: sebe20/rps-frontend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80

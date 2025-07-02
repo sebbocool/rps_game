@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Single Player - Rock Paper Scissors</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 500px;
+            margin: 40px auto;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        label, select, input {
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+            padding: 8px;
+        }
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+        }
+        #result {
+            margin-top: 30px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Play vs RockPaperFish (3000 ELO)</h1>
+
+    <form id="single-form">
+        <label for="player_name">Your Name:</label>
+        <input type="text" id="player_name" required>
+
+        <label for="player_choice">Your Choice:</label>
+        <select id="player_choice" required>
+            <option value="">Select...</option>
+            <option value="rock">Rock</option>
+            <option value="paper">Paper</option>
+            <option value="scissors">Scissors</option>
+        </select>
+
+        <button type="submit">Play</button>
+    </form>
+
+    <div id="result"></div>
+
+    <script>
+        const form = document.getElementById('single-form');
+        const resultDiv = document.getElementById('result');
+        const computerName = 'RockPaperFish';
+
+        function getRandomChoice(playerChoice) {
+            // computer is very good
+            if (Math.random() < 0.9) {
+                switch (playerChoice) {
+                    case 'rock':
+                        return 'paper';
+                    case 'paper':
+                        return 'scissors'; 
+                    case 'scissors':
+                        return 'rock'; 
+                    default:
+                        return getRandomChoice('rock'); // fallback
+                }
+            }   
+            const choices = ['rock', 'paper', 'scissors'];
+            return choices[Math.floor(Math.random() * choices.length)];
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const playerName = document.getElementById('player_name').value.trim();
+            const playerChoice = document.getElementById('player_choice').value;
+            const computerChoice = getRandomChoice(playerChoice);
+
+            const payload = {
+                p1_name: playerName,
+                p2_name: computerName,
+                p1_choice: playerChoice,
+                p2_choice: computerChoice
+            };
+
+            try {
+                const res = await fetch('http://localhost:5002/play', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await res.json();
+
+                if (res.ok) {
+                    resultDiv.innerHTML = `
+                        <h3>Result: ${result.outcome}</h3>
+                        <p><strong>${result.player1.name}</strong> chose ${result.player1.choice}, has ${result.player1.wins} wins, ${result.player1.ties} ties, ${result.player1.losses} losses</p>
+                        <p><strong>${result.player2.name}</strong> chose ${result.player2.choice}, has ${result.player2.wins} wins, ${result.player2.ties} ties, ${result.player2.losses} losses</p>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<p style="color:red;"><strong>Error:</strong> ${result.error}</p>`;
+                }
+
+            } catch (err) {
+                console.error(err);
+                resultDiv.innerHTML = `<p style="color:red;"><strong>Error:</strong> Could not connect to server.</p>`;
+            }
+        });
+    </script>
+
+</body>
+</html>

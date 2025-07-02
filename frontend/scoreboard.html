@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Top Players</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 30px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ccc;
+        }
+        th {
+            background-color: #f0f0f0;
+        }
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Greatest RPS Players Of All Time</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Rank</th>
+                <th>Name</th>
+                <th>Wins</th>
+                <th>Ties</th>
+                <th>Losses</th>
+                <th>Total Games</th>
+                <th>Win Rate (%)</th>
+            </tr>
+        </thead>
+        <tbody id="leaderboard-body">
+            <tr><td colspan="7">Loading...</td></tr>
+        </tbody>
+    </table>
+
+    <script>
+        async function fetchLeaderboard() {
+            try {
+                const res = await fetch('http://localhost:5002/leaderboard');
+                const data = await res.json();
+
+                const tbody = document.getElementById('leaderboard-body');
+                tbody.innerHTML = '';
+
+                if (!Array.isArray(data)) {
+                    tbody.innerHTML = `<tr><td colspan="7">Error fetching leaderboard</td></tr>`;
+                    return;
+                }
+
+                data.forEach(player => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${player.rank}</td>
+                        <td>${player.name}</td>
+                        <td>${player.wins}</td>
+                        <td>${player.ties}</td>
+                        <td>${player.losses}</td>
+                        <td>${player.total_games}</td>
+                        <td>${player.win_rate}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+                if (data.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7">No players yet</td></tr>`;
+                }
+
+            } catch (err) {
+                console.error(err);
+                document.getElementById('leaderboard-body').innerHTML = `<tr><td colspan="7">Error connecting to server</td></tr>`;
+            }
+        }
+
+        fetchLeaderboard();
+    </script>
+
+</body>
+</html>
