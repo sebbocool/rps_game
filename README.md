@@ -30,7 +30,9 @@ kubectl port-forward deployment/game-service 5002:5002
 kubectl port-forward deployment/rps-frontend 8080:80
 
 # RPS should now be accessible at:
-http://localhost:8080
+http://localhost:8080 - PvP
+http://localhost:8080/singleplayer - Play against RockPaperFish
+http://localhost:8080/scoreboard - See the greatest RPS players of all time
 
 
 There are security concerns, most importantly, the game service and the database are not protected by any authentication or authorization mechanisms. These issues would have to be solved before production deployment. The game service validates the choice of the player but not the name, so it's at big risk of an SQL injection.
