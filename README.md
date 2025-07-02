@@ -13,7 +13,7 @@ A web-based Rock Paper Scissors. It features:
 
 ## Architecture
 
-![Flowchart](rps_flowchart.png)
+![Flowchart](rps_flowchar.png)
 
 ![Kubernetes](rps_kubernetes.png)
 ---
