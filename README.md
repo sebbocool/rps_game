@@ -6,7 +6,7 @@ A web-based Rock Paper Scissors. It features:
 - Flask-based backend providing a REST API
 - PostgreSQL database with persistent storage
 
-- Play against the best RPS computer in the worlds RockPaperFish (estimated ELO of 3000+) or another player
+- Play against another player locally or against the best RPS computer in the world: RockPaperFish (estimated ELO of 3000+)
 - Scoreboard to track top players
 
 ---
